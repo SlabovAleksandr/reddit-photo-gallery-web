@@ -10,16 +10,16 @@
       display: block;
       position: absolute;
       width: 20px;
-      top: 9px;
-      right: 10px;
-      &:before {
-        // content: "&#124;";
-        content: "@";
-      }
+      top: 19px;
+      right: 0px;
     }
-    input {
+    form {
       flex-basis: 100%;
-      padding: 10px 50px 10px 10px;
+      padding: 10px 50px 10px 0px;
+      input {
+        width: 100%;
+        padding: 10px 50px 10px 10px;
+      }
     }
   }
   .card-list {

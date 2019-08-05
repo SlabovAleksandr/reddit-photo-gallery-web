@@ -1,8 +1,10 @@
 <div class="gallery-container">
   <h1>Reddit Search</h1>
   <div class="search-box">
-    <input [(ngModel)]="redditSearchText" (ngModelChange)="onSearchChange($event)" type="text" placeholder="Type Topic...">
-    <img class="i-search" src="/assets/img/i-search.png">
+    <form (ngSubmit)="searchReddit()">
+      <input [(ngModel)]="redditSearchText" name="redditSearch" type="text" placeholder="Type Topic...">
+    </form>
+    <img class="i-search" (click)="searchReddit()" src="/assets/img/i-search.png">
   </div>
   <div *ngIf="redditResults$ | async as redditResults" class="card-list">
     <div
@@ -14,7 +16,7 @@
         <img src="{{ redditResult.imgUrl | redditImg }}">
       </a>
     </div>
-    <div *ngIf="redditSearchText && redditResults.length === 0">Nothing is found.</div>
+    <div *ngIf="noResults">Nothing is found.</div>
     <div *ngIf="redditResults.length" class="page-buttons">
       <button [class.hidden]="page === 1" (click)="showPrevPage()">< Previous</button>
       <button [class.hidden]="disableNextPage || redditResults.length < 6" (click)="showNextPage()">Next ></button>

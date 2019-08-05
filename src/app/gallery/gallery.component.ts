@@ -11,33 +11,17 @@ import { NgxSpinnerService } from 'ngx-spinner';
 })
 export class GalleryComponent implements OnInit {
   public redditSearchText: string;
-  public redditSearchTextChanged = new Subject<string>();
   public redditResults$: BehaviorSubject<RedditResult[]> = new BehaviorSubject(Object([]));
   public page: number;
   public disableNextPage: boolean;
+  public noResults = false;
 
   constructor(
     private redditService: RedditService,
     private spinner: NgxSpinnerService
-  ) {
-    this.redditSearchTextChanged.pipe(
-      debounceTime(500),
-      distinctUntilChanged(),
-    ).subscribe(model => {
-      if (model) {
-        this.spinner.show();
-      }
-
-      this.redditSearchText = model;
-      this.searchReddit();
-    });
-  }
+  ) { }
 
   ngOnInit() {
-  }
-
-  public onSearchChange(query: string) {
-    this.redditSearchTextChanged.next(query);
   }
 
   public searchReddit() {
@@ -45,13 +29,22 @@ export class GalleryComponent implements OnInit {
       return;
     }
 
+    this.noResults = false;
+    this.spinner.show();
+
     this.redditService
       .search(this.redditSearchText)
       .pipe(
         tap(() => this.spinner.hide()),
         tap(() => this.page = 1)
       )
-      .subscribe(res => this.redditResults$.next(res));
+      .subscribe(res => {
+        if (!res.length) {
+          this.noResults = true;
+        }
+
+        this.redditResults$.next(res)
+      });
   }
 
   showPrevPage() {
